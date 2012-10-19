@@ -25,6 +25,7 @@ import static java.net.HttpURLConnection.HTTP_OK;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -151,6 +152,7 @@ public class ResourceTest extends HalServerTestCase {
     assertEquals(30, order1.integer("total"));
     assertEquals("USD", order1.string("currency"));
     assertEquals("shipped", order1.string("status"));
+    assertNull(order1.string("shippedToday"));
     assertEquals("/orders/123", order1.selfUri());
     assertEquals("/baskets/98712", order1.linkUri("basket"));
     assertEquals("/customers/7809", order1.linkUri("customer"));
@@ -159,6 +161,7 @@ public class ResourceTest extends HalServerTestCase {
     assertEquals(20, order2.integer("total"));
     assertEquals("USD", order2.string("currency"));
     assertEquals("processing", order2.string("status"));
+    assertNull(order2.string("shippedToday"));
     assertEquals("/orders/124", order2.selfUri());
     assertEquals("/baskets/97213", order2.linkUri("basket"));
     assertEquals("/customers/12369", order2.linkUri("customer"));
