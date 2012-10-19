@@ -134,8 +134,8 @@ public class Resource {
             Collections.singletonList(new Resource(this, gson, reader)));
         break;
       case BEGIN_ARRAY:
-        List<Resource> entries = new ArrayList<Resource>();
         reader.beginArray();
+        List<Resource> entries = new ArrayList<Resource>();
         while (reader.peek() == BEGIN_OBJECT)
           entries.add(new Resource(this, gson, reader));
         reader.endArray();
