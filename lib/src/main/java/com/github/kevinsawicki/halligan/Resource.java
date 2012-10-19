@@ -128,7 +128,7 @@ public class Resource {
     while (reader.hasNext()) {
       String name = reader.nextName();
       JsonToken next = reader.peek();
-      switch (reader.peek()) {
+      switch (next) {
       case BEGIN_OBJECT:
         resources.put(name,
             Collections.singletonList(new Resource(this, gson, reader)));
@@ -159,7 +159,8 @@ public class Resource {
    */
   protected void parseProperty(final Gson gson, final JsonReader reader,
       final String name) throws IOException {
-    switch (reader.peek()) {
+    JsonToken next = reader.peek();
+    switch (next) {
     case BEGIN_OBJECT:
       properties.put(name, gson.fromJson(reader, Map.class));
       break;
@@ -177,8 +178,7 @@ public class Resource {
       properties.put(name, reader.nextBoolean());
       break;
     default:
-      throw new IOException("Unrecognized property value token: "
-          + reader.peek());
+      throw new IOException("Unrecognized property value token: " + next);
     }
   }
 
