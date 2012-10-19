@@ -166,4 +166,22 @@ public class ResourceTest extends HalServerTestCase {
     assertEquals("/baskets/97213", order2.linkUri("basket"));
     assertEquals("/customers/12369", order2.linkUri("customer"));
   }
+
+  /**
+   * Get embedded resource
+   *
+   * @throws Exception
+   */
+  @Test
+  public void embeddedResource() throws Exception {
+    Resource order = new Resource(url).resource("orders");
+    assertNotNull(order);
+    assertEquals(30, order.integer("total"));
+    assertEquals("USD", order.string("currency"));
+    assertEquals("shipped", order.string("status"));
+    assertNull(order.string("shippedToday"));
+    assertEquals("/orders/123", order.selfUri());
+    assertEquals("/baskets/98712", order.linkUri("basket"));
+    assertEquals("/customers/7809", order.linkUri("customer"));
+  }
 }

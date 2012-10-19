@@ -288,6 +288,17 @@ public class Resource {
   }
 
   /**
+   * Get embedded resource with name
+   *
+   * @param name
+   * @return resource
+   */
+  public Resource resource(final String name) {
+    List<Resource> resources = resources(name);
+    return resources != null && !resources.isEmpty() ? resources.get(0) : null;
+  }
+
+  /**
    * Get all embedded resources
    *
    * @return iterator over all embedded resources
