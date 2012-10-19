@@ -23,6 +23,7 @@ package com.github.kevinsawicki.halligan;
 
 import static java.net.HttpURLConnection.HTTP_OK;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -110,7 +111,7 @@ public class ResourceTest extends HalServerTestCase {
   }
 
   /**
-   * Get resource property as integer
+   * Get resource property as a integer
    *
    * @throws Exception
    */
@@ -120,6 +121,18 @@ public class ResourceTest extends HalServerTestCase {
     assertEquals(-1, resource.integer("doesntExist"));
     assertEquals(14, resource.integer("currentlyProcessing"));
     assertEquals(20, resource.integer("shippedToday"));
+  }
+
+  /**
+   * Get resource property as a boolean
+   *
+   * @throws Exception
+   */
+  @Test
+  public void booleanProperty() throws Exception {
+    Resource resource = new Resource(url);
+    assertFalse(resource.bool("doesntExist"));
+    assertTrue(resource.bool("onTime"));
   }
 
   /**

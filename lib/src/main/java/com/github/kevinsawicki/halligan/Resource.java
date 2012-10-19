@@ -255,6 +255,18 @@ public class Resource {
   }
 
   /**
+   * Get resource property as a boolean
+   *
+   * @param name
+   * @return boolean value or false if the property is missing or not a
+   *         {@link Boolean}
+   */
+  public boolean bool(final String name) {
+    final Object value = properties.get(name);
+    return value instanceof Boolean ? ((Boolean) value).booleanValue() : false;
+  }
+
+  /**
    * Get resource property as a {@link String}
    *
    * @param name
