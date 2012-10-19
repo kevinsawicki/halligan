@@ -39,6 +39,7 @@ import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +48,7 @@ import java.util.Map.Entry;
 /**
  * Resource class
  */
-public class Resource {
+public class Resource implements Iterable<Resource> {
 
   private static final Type TYPE_LINKS = new TypeToken<Map<String, Link>>() {
   }.getType();
@@ -339,5 +340,17 @@ public class Resource {
    */
   public Iterable<Entry<String, List<Resource>>> resources() {
     return resources.entrySet();
+  }
+
+  /**
+   * Create iterator starting at the current resource and advancing down the
+   * chain of next links.
+   * <p>
+   * This returned iterator will return this resource on the first call to
+   * {@link Iterator#next()} followed by requesting and parsing the resource
+   * defined at this resource's {@link #nextUri()}
+   */
+  public Iterator<Resource> iterator() {
+    return new ResourceIterator(this);
   }
 }

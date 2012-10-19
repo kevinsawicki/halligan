@@ -32,6 +32,7 @@ import java.util.LinkedList;
 import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.jetty.server.Request;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -42,16 +43,15 @@ public class IterationTest extends HalServerTestCase {
 
   private static String url;
 
+  private static LinkedList<String> pages = new LinkedList<String>();
+
   /**
-   * Setup method
+   * Setup server
    *
    * @throws Exception
    */
   @BeforeClass
   public static void setup() throws Exception {
-    final LinkedList<String> pages = new LinkedList<String>();
-    pages.add("/response.json");
-    pages.add("/response_next.json");
     url = setUp(new RequestHandler() {
 
       @Override
@@ -60,6 +60,16 @@ public class IterationTest extends HalServerTestCase {
         response.setStatus(HTTP_OK);
       }
     });
+  }
+
+  /**
+   * Add pages
+   */
+  @Before
+  public void addPages() {
+    pages.clear();
+    pages.add("/response.json");
+    pages.add("/response_next.json");
   }
 
   /**
@@ -77,5 +87,24 @@ public class IterationTest extends HalServerTestCase {
     assertEquals(resource1.nextUri(), resource2.selfUri());
     assertEquals(0, resource2.integer("currentlyProcessing"));
     assertEquals(350, resource2.integer("shippedToday"));
+  }
+
+  /**
+   * Use an {@link Iterable} to traverse the resources
+   *
+   * @throws Exception
+   */
+  @Test
+  public void iterable() throws Exception {
+    int count = 0;
+    Resource previous = null;
+    for (Resource resource : new Resource(url)) {
+      assertNotNull(resource);
+      count++;
+      if (previous != null)
+        assertEquals(previous.nextUri(), resource.selfUri());
+      previous = resource;
+    }
+    assertEquals(2, count);
   }
 }
