@@ -16,3 +16,8 @@ $ mvn clean install
   * [http-request](https://github.com/kevinsawicki/http-request)
   * [gson](http://code.google.com/p/google-gson/)
 
+## FAQ
+
+### What does the name mean?
+Read [here](http://en.wikipedia.org/wiki/Halligan_bar)
+
