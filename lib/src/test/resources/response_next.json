@@ -1,0 +1,7 @@
+{
+  "_links": {
+    "self": { "href": "/orders?page=2" }
+  },
+  "currentlyProcessing": 0,
+  "shippedToday": 350
+}

@@ -36,6 +36,7 @@ import com.google.gson.stream.JsonToken;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -50,6 +51,17 @@ public class Resource {
 
   private static final Type TYPE_LINKS = new TypeToken<Map<String, Link>>() {
   }.getType();
+
+  private static String getPrefix(final URL url) {
+    String prefix = url.getProtocol() + "://" + url.getHost();
+    int port = url.getPort();
+    if (port != -1)
+      return prefix + ':' + port;
+    else
+      return prefix;
+  }
+
+  private final String prefix;
 
   private final int code;
 
@@ -71,6 +83,7 @@ public class Resource {
       HttpRequest request = HttpRequest.get(url);
       request.accept("application/hal+json");
       code = request.code();
+      prefix = getPrefix(request.getConnection().getURL());
       buffer = request.bufferedReader();
     } catch (HttpRequestException e) {
       throw e.getCause();
@@ -97,6 +110,7 @@ public class Resource {
   private Resource(final Resource parent, final Gson gson,
       final JsonReader reader) throws IOException {
     code = parent.code;
+    prefix = parent.prefix;
     reader.beginObject();
     parse(gson, reader);
     reader.endObject();
@@ -296,6 +310,26 @@ public class Resource {
   public Resource resource(final String name) {
     List<Resource> resources = resources(name);
     return resources != null && !resources.isEmpty() ? resources.get(0) : null;
+  }
+
+  /**
+   * Does this resource have a link to the next resource?
+   *
+   * @return true if link exists for the next resource, false otherwise
+   */
+  public boolean hasNext() {
+    String nextUri = nextUri();
+    return nextUri != null && nextUri.length() > 0;
+  }
+
+  /**
+   * Load the next resource
+   *
+   * @return next resource
+   * @throws IOException
+   */
+  public Resource next() throws IOException {
+    return new Resource(prefix + nextUri());
   }
 
   /**
