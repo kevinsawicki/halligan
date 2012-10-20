@@ -262,6 +262,15 @@ public class Resource implements Iterable<Resource> {
   }
 
   /**
+   * Get URI to find resource
+   *
+   * @return URI to find resource or null if no find link exists
+   */
+  public String findUri() {
+    return linkUri("find");
+  }
+
+  /**
    * Get URI of link with name
    *
    * @param name

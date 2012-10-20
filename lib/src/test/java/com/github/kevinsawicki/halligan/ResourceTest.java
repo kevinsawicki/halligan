@@ -106,6 +106,7 @@ public class ResourceTest extends HalServerTestCase {
   @Test
   public void getFindLink() throws Exception {
     Resource resource = new Resource(url);
+    assertEquals("/orders{?id}", resource.findUri());
     Link link = resource.link("find");
     assertNotNull(link);
     assertEquals("/orders{?id}", link.href);
