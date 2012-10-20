@@ -62,6 +62,8 @@ public class Resource implements Iterable<Resource> {
       return prefix;
   }
 
+  private final Gson gson;
+
   private final String prefix;
 
   private final int code;
@@ -79,6 +81,19 @@ public class Resource implements Iterable<Resource> {
    * @throws IOException
    */
   public Resource(final String url) throws IOException {
+    this(new GsonBuilder().create(), url);
+  }
+
+  /**
+   * Create resource form URL
+   *
+   * @param gson
+   * @param url
+   * @throws IOException
+   */
+  public Resource(final Gson gson, final String url) throws IOException {
+    this.gson = gson;
+
     BufferedReader buffer;
     try {
       HttpRequest request = HttpRequest.get(url);
@@ -90,7 +105,6 @@ public class Resource implements Iterable<Resource> {
       throw e.getCause();
     }
 
-    Gson gson = new GsonBuilder().create();
     JsonReader reader = new JsonReader(buffer);
     try {
       parse(gson, reader);
@@ -111,6 +125,7 @@ public class Resource implements Iterable<Resource> {
       final JsonReader reader) throws IOException {
     code = parent.code;
     prefix = parent.prefix;
+    this.gson = gson;
     parse(gson, reader);
   }
 
@@ -350,7 +365,7 @@ public class Resource implements Iterable<Resource> {
    * @throws IOException
    */
   public Resource next() throws IOException {
-    return new Resource(prefix + nextUri());
+    return new Resource(gson, prefix + nextUri());
   }
 
   /**
@@ -360,7 +375,7 @@ public class Resource implements Iterable<Resource> {
    * @throws IOException
    */
   public Resource load() throws IOException {
-    return new Resource(prefix + selfUri());
+    return new Resource(gson, prefix + selfUri());
   }
 
   /**
