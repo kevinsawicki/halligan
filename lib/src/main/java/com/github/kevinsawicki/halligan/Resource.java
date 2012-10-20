@@ -314,6 +314,16 @@ public class Resource implements Iterable<Resource> {
   }
 
   /**
+   * Does this resource have a property with the given name?
+   *
+   * @param name
+   * @return true if property exists, false otherwise
+   */
+  public boolean hasProperty(final String name) {
+    return properties.containsKey(name);
+  }
+
+  /**
    * Does this resource have a link to the next resource?
    *
    * @return true if link exists for the next resource, false otherwise
@@ -331,6 +341,16 @@ public class Resource implements Iterable<Resource> {
    */
   public Resource next() throws IOException {
     return new Resource(prefix + nextUri());
+  }
+
+  /**
+   * Load this resource using the self URI
+   *
+   * @return resource loaded from {@link #selfUri()} value
+   * @throws IOException
+   */
+  public Resource load() throws IOException {
+    return new Resource(prefix + selfUri());
   }
 
   /**

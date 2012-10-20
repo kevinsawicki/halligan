@@ -1,0 +1,12 @@
+{
+  "_links": {
+    "self": { "href": "/orders/123" },
+    "basket": { "href": "/baskets/98712" },
+    "customer": { "href": "/customers/7809" }
+  },
+  "total": 30.00,
+  "currency": "USD",
+  "status": "shipped",
+  "itemCount": 10,
+  "coupon": true
+}
