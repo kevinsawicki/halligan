@@ -93,7 +93,6 @@ public class Resource implements Iterable<Resource> {
     Gson gson = new GsonBuilder().create();
     JsonReader reader = new JsonReader(buffer);
     try {
-      reader.beginObject();
       parse(gson, reader);
     } catch (JsonParseException e) {
       IOException ioException = new IOException("JSON parsing failed");
@@ -112,13 +111,12 @@ public class Resource implements Iterable<Resource> {
       final JsonReader reader) throws IOException {
     code = parent.code;
     prefix = parent.prefix;
-    reader.beginObject();
     parse(gson, reader);
-    reader.endObject();
   }
 
   private void parse(final Gson gson, final JsonReader reader)
       throws IOException {
+    reader.beginObject();
     while (reader.hasNext() && reader.peek() == NAME) {
       String name = reader.nextName();
       if ("_links".equals(name))
@@ -128,6 +126,7 @@ public class Resource implements Iterable<Resource> {
       else
         parseProperty(gson, reader, name);
     }
+    reader.endObject();
   }
 
   /**
