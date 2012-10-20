@@ -29,6 +29,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletResponse;
@@ -122,6 +123,24 @@ public class ResourceTest extends HalServerTestCase {
     assertEquals(-1, resource.integer("doesntExist"));
     assertEquals(14, resource.integer("currentlyProcessing"));
     assertEquals(20, resource.integer("shippedToday"));
+  }
+
+  /**
+   * Get resource property as a map
+   *
+   * @throws Exception
+   */
+  @SuppressWarnings("rawtypes")
+  @Test
+  public void mapProperty() throws Exception {
+    Resource resource = new Resource(url);
+    assertNull(resource.map("doesntExist"));
+    Map<String, Object> map = resource.map("regions");
+    assertNotNull(map);
+    assertEquals(10D, ((Map) map.get("EMEA")).get("Europe"));
+    assertEquals(4D, ((Map) map.get("EMEA")).get("Middle East"));
+    assertEquals(1D, ((Map) map.get("EMEA")).get("Africa"));
+    assertEquals(5D, map.get("AP"));
   }
 
   /**

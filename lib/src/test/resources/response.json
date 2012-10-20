@@ -27,5 +27,13 @@
   },
   "currentlyProcessing": 14,
   "shippedToday": 20,
-  "onTime": true
+  "onTime": true,
+  "regions": {
+    "EMEA": {
+      "Europe": 10,
+      "Middle East": 4,
+      "Africa": 1
+    },
+    "AP": 5
+  }
 }

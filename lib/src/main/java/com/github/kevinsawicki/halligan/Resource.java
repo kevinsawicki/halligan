@@ -318,6 +318,19 @@ public class Resource implements Iterable<Resource> {
   }
 
   /**
+   * Get resource property as a {@link Map}
+   *
+   * @param name
+   * @return map value of property of null if the property is missing or not a
+   *         {@link Map}
+   */
+  @SuppressWarnings("unchecked")
+  public Map<String, Object> map(final String name) {
+    final Object value = properties.get(name);
+    return value instanceof Map ? (Map<String, Object>) value : null;
+  }
+
+  /**
    * Get embedded resources with given name
    *
    * @param name
