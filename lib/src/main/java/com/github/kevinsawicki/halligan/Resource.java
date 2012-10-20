@@ -98,8 +98,8 @@ public class Resource implements Iterable<Resource> {
     try {
       HttpRequest request = createRequest(url);
       code = request.code();
-      prefix = getPrefix(request.getConnection().getURL());
       buffer = request.bufferedReader();
+      prefix = getPrefix(request.getConnection().getURL());
     } catch (HttpRequestException e) {
       throw e.getCause();
     }
