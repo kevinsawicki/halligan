@@ -96,8 +96,7 @@ public class Resource implements Iterable<Resource> {
 
     BufferedReader buffer;
     try {
-      HttpRequest request = HttpRequest.get(url);
-      request.accept("application/hal+json");
+      HttpRequest request = createRequest(url);
       code = request.code();
       prefix = getPrefix(request.getConnection().getURL());
       buffer = request.bufferedReader();
@@ -127,6 +126,18 @@ public class Resource implements Iterable<Resource> {
     prefix = parent.prefix;
     this.gson = gson;
     parse(gson, reader);
+  }
+
+  /**
+   * Create request to URL
+   *
+   * @param url
+   * @return request
+   * @throws HttpRequestException
+   */
+  protected HttpRequest createRequest(final String url)
+      throws HttpRequestException {
+    return HttpRequest.get(url).accept("application/hal+json");
   }
 
   private void parse(final Gson gson, final JsonReader reader)
