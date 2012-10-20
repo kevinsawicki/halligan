@@ -144,6 +144,7 @@ public class ResourceTest extends HalServerTestCase {
   @Test
   public void embeddedResources() throws Exception {
     Resource resource = new Resource(url);
+    assertTrue(resource.hasResource("orders"));
     List<Resource> resources = resource.resources("orders");
     assertNotNull(resources);
     assertEquals(2, resources.size());

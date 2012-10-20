@@ -324,6 +324,17 @@ public class Resource implements Iterable<Resource> {
   }
 
   /**
+   * Does this resource have one or more embedded resources with the given name?
+   *
+   * @param name
+   * @return true if one or more embedded resources exist, false otherwise
+   */
+  public boolean hasResource(final String name) {
+    List<Resource> resources = resources(name);
+    return resources != null && !resources.isEmpty();
+  }
+
+  /**
    * Does this resource have a link to the next resource?
    *
    * @return true if link exists for the next resource, false otherwise
