@@ -111,8 +111,8 @@ public class HalServerTestCase {
      * @param fileName
      */
     protected void writeFile(final String fileName) {
+      InputStream input = getClass().getResourceAsStream(fileName);
       try {
-        InputStream input = getClass().getResourceAsStream(fileName);
         OutputStream output = response.getOutputStream();
         byte[] buffer = new byte[8192];
         int read;
@@ -120,6 +120,12 @@ public class HalServerTestCase {
           output.write(buffer, 0, read);
       } catch (IOException e) {
         throw new RuntimeException(e);
+      } finally {
+        try {
+          input.close();
+        } catch (IOException ignored) {
+          // Ignored
+        }
       }
     }
 
