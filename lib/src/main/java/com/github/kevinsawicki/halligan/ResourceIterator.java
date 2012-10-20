@@ -36,6 +36,8 @@ public class ResourceIterator implements Iterator<Resource> {
 
   /**
    * Create iterator starting at given resource
+   * <p>
+   * The given resource will be returned on the first call to {@link #next()}
    *
    * @param resource
    */
