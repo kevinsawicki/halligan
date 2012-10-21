@@ -84,9 +84,9 @@ public class IterationTest extends HalServerTestCase {
     Resource resource2 = resource1.next();
     assertNotNull(resource2);
     assertFalse(resource2.hasNext());
-    assertEquals(resource1.nextUri(), resource2.selfUri());
-    assertEquals(0, resource2.integer("currentlyProcessing"));
-    assertEquals(350, resource2.integer("shippedToday"));
+    assertEquals(resource1.getNextUri(), resource2.getSelfUri());
+    assertEquals(0, resource2.getInt("currentlyProcessing"));
+    assertEquals(350, resource2.getInt("shippedToday"));
   }
 
   /**
@@ -102,7 +102,7 @@ public class IterationTest extends HalServerTestCase {
       assertNotNull(resource);
       count++;
       if (previous != null)
-        assertEquals(previous.nextUri(), resource.selfUri());
+        assertEquals(previous.getNextUri(), resource.getSelfUri());
       previous = resource;
     }
     assertEquals(2, count);

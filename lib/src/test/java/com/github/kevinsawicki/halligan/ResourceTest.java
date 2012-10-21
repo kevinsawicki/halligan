@@ -71,7 +71,7 @@ public class ResourceTest extends HalServerTestCase {
   public void getCode() throws Exception {
     Resource resource = new Resource(url);
     assertEquals(200, resource.code());
-    for (Entry<String, List<Resource>> resources : resource.resources())
+    for (Entry<String, List<Resource>> resources : resource.getResources())
       for (Resource child : resources.getValue())
         assertEquals(200, child.code());
   }
@@ -84,7 +84,7 @@ public class ResourceTest extends HalServerTestCase {
   @Test
   public void getSelfUri() throws Exception {
     Resource resource = new Resource(url);
-    assertEquals("/orders", resource.selfUri());
+    assertEquals("/orders", resource.getSelfUri());
   }
 
   /**
@@ -95,7 +95,7 @@ public class ResourceTest extends HalServerTestCase {
   @Test
   public void getNextUri() throws Exception {
     Resource resource = new Resource(url);
-    assertEquals("/orders?page=2", resource.nextUri());
+    assertEquals("/orders?page=2", resource.getNextUri());
   }
 
   /**
@@ -106,8 +106,8 @@ public class ResourceTest extends HalServerTestCase {
   @Test
   public void getFindLink() throws Exception {
     Resource resource = new Resource(url);
-    assertEquals("/orders{?id}", resource.findUri());
-    Link link = resource.link("find");
+    assertEquals("/orders{?id}", resource.getFindUri());
+    Link link = resource.getLink("find");
     assertNotNull(link);
     assertEquals("/orders{?id}", link.href);
     assertTrue(link.templated);
@@ -121,9 +121,9 @@ public class ResourceTest extends HalServerTestCase {
   @Test
   public void intProperty() throws Exception {
     Resource resource = new Resource(url);
-    assertEquals(-1, resource.integer("doesntExist"));
-    assertEquals(14, resource.integer("currentlyProcessing"));
-    assertEquals(20, resource.integer("shippedToday"));
+    assertEquals(-1, resource.getInt("doesntExist"));
+    assertEquals(14, resource.getInt("currentlyProcessing"));
+    assertEquals(20, resource.getInt("shippedToday"));
   }
 
   /**
@@ -135,8 +135,8 @@ public class ResourceTest extends HalServerTestCase {
   @Test
   public void mapProperty() throws Exception {
     Resource resource = new Resource(url);
-    assertNull(resource.map("doesntExist"));
-    Map<String, Object> map = resource.map("regions");
+    assertNull(resource.getMap("doesntExist"));
+    Map<String, Object> map = resource.getMap("regions");
     assertNotNull(map);
     assertEquals(10D, ((Map) map.get("EMEA")).get("Europe"));
     assertEquals(4D, ((Map) map.get("EMEA")).get("Middle East"));
@@ -152,8 +152,8 @@ public class ResourceTest extends HalServerTestCase {
   @Test
   public void booleanProperty() throws Exception {
     Resource resource = new Resource(url);
-    assertFalse(resource.bool("doesntExist"));
-    assertTrue(resource.bool("onTime"));
+    assertFalse(resource.getBoolean("doesntExist"));
+    assertTrue(resource.getBoolean("onTime"));
   }
 
   /**
@@ -165,27 +165,27 @@ public class ResourceTest extends HalServerTestCase {
   public void embeddedResources() throws Exception {
     Resource resource = new Resource(url);
     assertTrue(resource.hasResource("orders"));
-    List<Resource> resources = resource.resources("orders");
+    List<Resource> resources = resource.getResources("orders");
     assertNotNull(resources);
     assertEquals(2, resources.size());
 
     Resource order1 = resources.get(0);
-    assertEquals(30, order1.integer("total"));
-    assertEquals("USD", order1.string("currency"));
-    assertEquals("shipped", order1.string("status"));
-    assertNull(order1.string("shippedToday"));
-    assertEquals("/orders/123", order1.selfUri());
-    assertEquals("/baskets/98712", order1.linkUri("basket"));
-    assertEquals("/customers/7809", order1.linkUri("customer"));
+    assertEquals(30, order1.getInt("total"));
+    assertEquals("USD", order1.getString("currency"));
+    assertEquals("shipped", order1.getString("status"));
+    assertNull(order1.getString("shippedToday"));
+    assertEquals("/orders/123", order1.getSelfUri());
+    assertEquals("/baskets/98712", order1.getLinkUri("basket"));
+    assertEquals("/customers/7809", order1.getLinkUri("customer"));
 
     Resource order2 = resources.get(1);
-    assertEquals(20, order2.integer("total"));
-    assertEquals("USD", order2.string("currency"));
-    assertEquals("processing", order2.string("status"));
-    assertNull(order2.string("shippedToday"));
-    assertEquals("/orders/124", order2.selfUri());
-    assertEquals("/baskets/97213", order2.linkUri("basket"));
-    assertEquals("/customers/12369", order2.linkUri("customer"));
+    assertEquals(20, order2.getInt("total"));
+    assertEquals("USD", order2.getString("currency"));
+    assertEquals("processing", order2.getString("status"));
+    assertNull(order2.getString("shippedToday"));
+    assertEquals("/orders/124", order2.getSelfUri());
+    assertEquals("/baskets/97213", order2.getLinkUri("basket"));
+    assertEquals("/customers/12369", order2.getLinkUri("customer"));
   }
 
   /**
@@ -195,14 +195,14 @@ public class ResourceTest extends HalServerTestCase {
    */
   @Test
   public void embeddedResource() throws Exception {
-    Resource order = new Resource(url).resource("orders");
+    Resource order = new Resource(url).getResource("orders");
     assertNotNull(order);
-    assertEquals(30, order.integer("total"));
-    assertEquals("USD", order.string("currency"));
-    assertEquals("shipped", order.string("status"));
-    assertNull(order.string("shippedToday"));
-    assertEquals("/orders/123", order.selfUri());
-    assertEquals("/baskets/98712", order.linkUri("basket"));
-    assertEquals("/customers/7809", order.linkUri("customer"));
+    assertEquals(30, order.getInt("total"));
+    assertEquals("USD", order.getString("currency"));
+    assertEquals("shipped", order.getString("status"));
+    assertNull(order.getString("shippedToday"));
+    assertEquals("/orders/123", order.getSelfUri());
+    assertEquals("/baskets/98712", order.getLinkUri("basket"));
+    assertEquals("/customers/7809", order.getLinkUri("customer"));
   }
 }

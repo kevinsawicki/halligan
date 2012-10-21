@@ -80,14 +80,14 @@ public class SelfLoadTest extends HalServerTestCase {
   @Test
   public void loadSelf() throws Exception {
     Resource root = new Resource(url);
-    Resource partialOrder = root.resource("orders");
+    Resource partialOrder = root.getResource("orders");
     assertNotNull(partialOrder);
     assertFalse(partialOrder.hasProperty("itemCount"));
     assertFalse(partialOrder.hasProperty("coupon"));
     Resource fullOrder = partialOrder.load();
     assertNotNull(fullOrder);
-    assertEquals(partialOrder.selfUri(), fullOrder.selfUri());
-    assertEquals(10, fullOrder.integer("itemCount"));
-    assertTrue(fullOrder.bool("coupon"));
+    assertEquals(partialOrder.getSelfUri(), fullOrder.getSelfUri());
+    assertEquals(10, fullOrder.getInt("itemCount"));
+    assertTrue(fullOrder.getBoolean("coupon"));
   }
 }

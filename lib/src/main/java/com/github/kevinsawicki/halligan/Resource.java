@@ -248,8 +248,8 @@ public class Resource implements Iterable<Resource> {
    *
    * @return URI to self or null if no self link exists
    */
-  public String selfUri() {
-    return linkUri("self");
+  public String getSelfUri() {
+    return getLinkUri("self");
   }
 
   /**
@@ -257,8 +257,8 @@ public class Resource implements Iterable<Resource> {
    *
    * @return URI to next resource or null if no next link exists
    */
-  public String nextUri() {
-    return linkUri("next");
+  public String getNextUri() {
+    return getLinkUri("next");
   }
 
   /**
@@ -266,8 +266,8 @@ public class Resource implements Iterable<Resource> {
    *
    * @return URI to find resource or null if no find link exists
    */
-  public String findUri() {
-    return linkUri("find");
+  public String getFindUri() {
+    return getLinkUri("find");
   }
 
   /**
@@ -276,8 +276,8 @@ public class Resource implements Iterable<Resource> {
    * @param name
    * @return URI or null if no link with given name exists
    */
-  public String linkUri(final String name) {
-    final Link link = link(name);
+  public String getLinkUri(final String name) {
+    final Link link = getLink(name);
     return link != null ? link.href : null;
   }
 
@@ -287,7 +287,7 @@ public class Resource implements Iterable<Resource> {
    * @param name
    * @return link or null if none for given name
    */
-  public Link link(final String name) {
+  public Link getLink(final String name) {
     return links.get(name);
   }
 
@@ -298,7 +298,7 @@ public class Resource implements Iterable<Resource> {
    * @return integer value or -1 if the property is missing or not a
    *         {@link Number}
    */
-  public int integer(final String name) {
+  public int getInt(final String name) {
     final Object value = properties.get(name);
     return value instanceof Number ? ((Number) value).intValue() : -1;
   }
@@ -310,7 +310,7 @@ public class Resource implements Iterable<Resource> {
    * @return boolean value or false if the property is missing or not a
    *         {@link Boolean}
    */
-  public boolean bool(final String name) {
+  public boolean getBoolean(final String name) {
     final Object value = properties.get(name);
     return value instanceof Boolean ? ((Boolean) value).booleanValue() : false;
   }
@@ -321,7 +321,7 @@ public class Resource implements Iterable<Resource> {
    * @param name
    * @return string value of property or null if the property is missing
    */
-  public String string(final String name) {
+  public String getString(final String name) {
     final Object value = properties.get(name);
     return value != null ? value.toString() : null;
   }
@@ -334,7 +334,7 @@ public class Resource implements Iterable<Resource> {
    *         {@link Map}
    */
   @SuppressWarnings("unchecked")
-  public Map<String, Object> map(final String name) {
+  public Map<String, Object> getMap(final String name) {
     final Object value = properties.get(name);
     return value instanceof Map ? (Map<String, Object>) value : null;
   }
@@ -345,7 +345,7 @@ public class Resource implements Iterable<Resource> {
    * @param name
    * @return list of resources
    */
-  public List<Resource> resources(final String name) {
+  public List<Resource> getResources(final String name) {
     return resources.get(name);
   }
 
@@ -355,8 +355,8 @@ public class Resource implements Iterable<Resource> {
    * @param name
    * @return resource
    */
-  public Resource resource(final String name) {
-    List<Resource> resources = resources(name);
+  public Resource getResource(final String name) {
+    List<Resource> resources = getResources(name);
     return resources != null && !resources.isEmpty() ? resources.get(0) : null;
   }
 
@@ -377,7 +377,7 @@ public class Resource implements Iterable<Resource> {
    * @return true if one or more embedded resources exist, false otherwise
    */
   public boolean hasResource(final String name) {
-    List<Resource> resources = resources(name);
+    List<Resource> resources = getResources(name);
     return resources != null && !resources.isEmpty();
   }
 
@@ -387,7 +387,7 @@ public class Resource implements Iterable<Resource> {
    * @return true if link exists for the next resource, false otherwise
    */
   public boolean hasNext() {
-    String nextUri = nextUri();
+    String nextUri = getNextUri();
     return nextUri != null && nextUri.length() > 0;
   }
 
@@ -398,17 +398,17 @@ public class Resource implements Iterable<Resource> {
    * @throws IOException
    */
   public Resource next() throws IOException {
-    return new Resource(gson, prefix + nextUri());
+    return new Resource(gson, prefix + getNextUri());
   }
 
   /**
    * Load this resource using the self URI
    *
-   * @return resource loaded from {@link #selfUri()} value
+   * @return resource loaded from {@link #getSelfUri()} value
    * @throws IOException
    */
   public Resource load() throws IOException {
-    return new Resource(gson, prefix + selfUri());
+    return new Resource(gson, prefix + getSelfUri());
   }
 
   /**
@@ -416,7 +416,7 @@ public class Resource implements Iterable<Resource> {
    *
    * @return iterator over all embedded resources
    */
-  public Iterable<Entry<String, List<Resource>>> resources() {
+  public Iterable<Entry<String, List<Resource>>> getResources() {
     return resources.entrySet();
   }
 
@@ -426,7 +426,7 @@ public class Resource implements Iterable<Resource> {
    * <p>
    * This returned iterator will return this resource on the first call to
    * {@link Iterator#next()} followed by requesting and parsing the resource
-   * defined at this resource's {@link #nextUri()}
+   * defined at this resource's {@link #getNextUri()}
    */
   public Iterator<Resource> iterator() {
     return new ResourceIterator(this);
