@@ -235,7 +235,7 @@ public class Resource implements Iterable<Resource> {
   }
 
   /**
-   * Get HTTP status code from response
+   * Get the HTTP status code of the response
    *
    * @return code
    */
