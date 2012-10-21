@@ -114,7 +114,7 @@ public class ResourceTest extends HalServerTestCase {
   }
 
   /**
-   * Get resource property as a integer
+   * Get resource property as an integer
    *
    * @throws Exception
    */
@@ -124,6 +124,18 @@ public class ResourceTest extends HalServerTestCase {
     assertEquals(-1, resource.getInt("doesntExist"));
     assertEquals(14, resource.getInt("currentlyProcessing"));
     assertEquals(20, resource.getInt("shippedToday"));
+  }
+
+  /**
+   * Get resource property as a double
+   *
+   * @throws Exception
+   */
+  @Test
+  public void doubleProperty() throws Exception {
+    Resource resource = new Resource(url);
+    assertEquals(-1D, resource.getDouble("doesntExist"), 0);
+    assertEquals(4.5D, resource.getDouble("ratio"), 0);
   }
 
   /**

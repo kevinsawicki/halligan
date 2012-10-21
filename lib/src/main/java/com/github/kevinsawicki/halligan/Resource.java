@@ -304,6 +304,18 @@ public class Resource implements Iterable<Resource> {
   }
 
   /**
+   * Get resource property as an integer
+   *
+   * @param name
+   * @return integer value or -1 if the property is missing or not a
+   *         {@link Number}
+   */
+  public double getDouble(final String name) {
+    final Object value = properties.get(name);
+    return value instanceof Number ? ((Number) value).doubleValue() : -1;
+  }
+
+  /**
    * Get resource property as a boolean
    *
    * @param name
