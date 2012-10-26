@@ -383,6 +383,15 @@ public class Resource implements Iterable<Resource> {
   }
 
   /**
+   * Does this resource have embedded resources?
+   *
+   * @return true if at least one embedded resource, false otherwise
+   */
+  public boolean hasResources() {
+    return !resources.isEmpty();
+  }
+
+  /**
    * Does this resource have one or more embedded resources with the given name?
    *
    * @param name

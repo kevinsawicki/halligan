@@ -176,12 +176,14 @@ public class ResourceTest extends HalServerTestCase {
   @Test
   public void embeddedResources() throws Exception {
     Resource resource = new Resource(url);
+    assertTrue(resource.hasResources());
     assertTrue(resource.hasResource("orders"));
     List<Resource> resources = resource.getResources("orders");
     assertNotNull(resources);
     assertEquals(2, resources.size());
 
     Resource order1 = resources.get(0);
+    assertFalse(order1.hasResources());
     assertEquals(30, order1.getInt("total"));
     assertEquals("USD", order1.getString("currency"));
     assertEquals("shipped", order1.getString("status"));
@@ -191,6 +193,7 @@ public class ResourceTest extends HalServerTestCase {
     assertEquals("/customers/7809", order1.getLinkUri("customer"));
 
     Resource order2 = resources.get(1);
+    assertFalse(order2.hasResources());
     assertEquals(20, order2.getInt("total"));
     assertEquals("USD", order2.getString("currency"));
     assertEquals("processing", order2.getString("status"));
