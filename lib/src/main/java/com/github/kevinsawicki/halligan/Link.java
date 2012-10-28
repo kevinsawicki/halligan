@@ -21,10 +21,14 @@
  */
 package com.github.kevinsawicki.halligan;
 
+import java.io.Serializable;
+
 /**
  * Link properties
  */
-public class Link {
+public class Link implements Serializable {
+
+  private static final long serialVersionUID = -3017682664576119547L;
 
   /**
    * A URI that can be templated
