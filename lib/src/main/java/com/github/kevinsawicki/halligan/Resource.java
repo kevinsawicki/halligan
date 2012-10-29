@@ -159,7 +159,10 @@ public class Resource implements Iterable<Resource> {
    * @throw IOException
    */
   protected Resource createResource(final String url) throws IOException {
-    return new Resource(prefix + url);
+    if (url.length() > 0 && url.charAt(0) == '/')
+      return new Resource(prefix + url);
+    else
+      return new Resource(url);
   }
 
   private void parse(final JsonReader reader) throws IOException {
