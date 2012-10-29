@@ -61,9 +61,15 @@ public class Resource implements Iterable<Resource> {
       return prefix;
   }
 
-  private final GsonFactory gson;
+  /**
+   * Gson factory
+   */
+  protected final GsonFactory gson;
 
-  private final String prefix;
+  /**
+   * Host prefix
+   */
+  protected final String prefix;
 
   private final int code;
 
@@ -163,6 +169,12 @@ public class Resource implements Iterable<Resource> {
       return new Resource(prefix + url);
     else
       return new Resource(url);
+  }
+
+  private Resource requestResource(String url) throws IOException {
+    if (url.length() > 0 && url.charAt(0) == '/')
+      url = prefix + url;
+    return createResource(url);
   }
 
   private void parse(final JsonReader reader) throws IOException {
@@ -438,7 +450,7 @@ public class Resource implements Iterable<Resource> {
    * @throws IOException
    */
   public Resource next() throws IOException {
-    return createResource(getNextUri());
+    return requestResource(getNextUri());
   }
 
   /**
@@ -448,7 +460,7 @@ public class Resource implements Iterable<Resource> {
    * @throws IOException
    */
   public Resource load() throws IOException {
-    return createResource(getSelfUri());
+    return requestResource(getSelfUri());
   }
 
   /**
