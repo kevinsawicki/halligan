@@ -34,6 +34,7 @@ import com.google.gson.stream.JsonToken;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
@@ -47,7 +48,9 @@ import java.util.Map.Entry;
 /**
  * Resource class
  */
-public class Resource implements Iterable<Resource> {
+public class Resource implements Iterable<Resource>, Serializable {
+
+  private static final long serialVersionUID = 8768898492847217862L;
 
   private static final Type TYPE_LINKS = new TypeToken<Map<String, Link>>() {
   }.getType();
