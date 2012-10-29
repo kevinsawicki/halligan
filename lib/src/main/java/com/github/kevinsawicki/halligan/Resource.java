@@ -364,6 +364,17 @@ public class Resource implements Iterable<Resource> {
   }
 
   /**
+   * Get resource property as a long
+   *
+   * @param name
+   * @return long value or -1 if the property is missing or not a {@link Number}
+   */
+  public long getLong(final String name) {
+    final Object value = properties.get(name);
+    return value instanceof Number ? ((Number) value).longValue() : -1;
+  }
+
+  /**
    * Get resource property as a boolean
    *
    * @param name
