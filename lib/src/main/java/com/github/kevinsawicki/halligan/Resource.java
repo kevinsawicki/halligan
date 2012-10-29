@@ -73,11 +73,20 @@ public class Resource implements Iterable<Resource> {
 
   private final int code;
 
-  private final Map<String, Object> properties = new LinkedHashMap<String, Object>();
+  /**
+   * Resource properties
+   */
+  protected final Map<String, Object> properties = new LinkedHashMap<String, Object>();
 
-  private final Map<String, Link> links = new LinkedHashMap<String, Link>();
+  /**
+   * Resource links
+   */
+  protected final Map<String, Link> links = new LinkedHashMap<String, Link>();
 
-  private final Map<String, List<Resource>> resources = new LinkedHashMap<String, List<Resource>>();
+  /**
+   * Embedded resources
+   */
+  protected final Map<String, List<Resource>> resources = new LinkedHashMap<String, List<Resource>>();
 
   /**
    * Create resource from URL
