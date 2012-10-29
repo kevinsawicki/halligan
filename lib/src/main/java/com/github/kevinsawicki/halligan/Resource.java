@@ -62,7 +62,7 @@ public class Resource implements Iterable<Resource> {
       return prefix;
   }
 
-  private transient final Gson gson;
+  private final Gson gson;
 
   private final String prefix;
 
