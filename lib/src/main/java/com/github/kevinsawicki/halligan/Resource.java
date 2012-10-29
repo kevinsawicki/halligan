@@ -21,13 +21,12 @@
  */
 package com.github.kevinsawicki.halligan;
 
+import static com.github.kevinsawicki.halligan.DefaultGsonFactory.GSON_FACTORY;
 import static com.google.gson.stream.JsonToken.BEGIN_OBJECT;
 import static com.google.gson.stream.JsonToken.NAME;
 
 import com.github.kevinsawicki.http.HttpRequest;
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
@@ -62,7 +61,7 @@ public class Resource implements Iterable<Resource> {
       return prefix;
   }
 
-  private final Gson gson;
+  private final GsonFactory gson;
 
   private final String prefix;
 
@@ -81,7 +80,7 @@ public class Resource implements Iterable<Resource> {
    * @throws IOException
    */
   public Resource(final String url) throws IOException {
-    this(new GsonBuilder().create(), url);
+    this(GSON_FACTORY, url);
   }
 
   /**
@@ -91,7 +90,7 @@ public class Resource implements Iterable<Resource> {
    * @param url
    * @throws IOException
    */
-  public Resource(final Gson gson, final String url) throws IOException {
+  public Resource(final GsonFactory gson, final String url) throws IOException {
     this.gson = gson;
 
     BufferedReader buffer;
@@ -106,7 +105,7 @@ public class Resource implements Iterable<Resource> {
 
     JsonReader reader = new JsonReader(buffer);
     try {
-      parse(gson, reader);
+      parse(reader);
     } catch (JsonParseException e) {
       IOException ioException = new IOException("JSON parsing failed");
       ioException.initCause(e);
@@ -120,12 +119,12 @@ public class Resource implements Iterable<Resource> {
     }
   }
 
-  private Resource(final Resource parent, final Gson gson,
+  private Resource(final Resource parent, final GsonFactory gson,
       final JsonReader reader) throws IOException {
     code = parent.code;
     prefix = parent.prefix;
     this.gson = gson;
-    parse(gson, reader);
+    parse(reader);
   }
 
   /**
@@ -140,17 +139,16 @@ public class Resource implements Iterable<Resource> {
     return HttpRequest.get(url).accept("application/hal+json");
   }
 
-  private void parse(final Gson gson, final JsonReader reader)
-      throws IOException {
+  private void parse(final JsonReader reader) throws IOException {
     reader.beginObject();
     while (reader.hasNext() && reader.peek() == NAME) {
       String name = reader.nextName();
       if ("_links".equals(name))
-        parseLinks(gson, reader);
+        parseLinks(reader);
       else if ("_embedded".equals(name))
-        parseResources(gson, reader);
+        parseResources(reader);
       else
-        parseProperty(gson, reader, name);
+        parseProperty(reader, name);
     }
     reader.endObject();
   }
@@ -158,12 +156,10 @@ public class Resource implements Iterable<Resource> {
   /**
    * Parse resources from current value
    *
-   * @param gson
    * @param reader
    * @throws IOException
    */
-  protected void parseResources(final Gson gson, final JsonReader reader)
-      throws IOException {
+  protected void parseResources(final JsonReader reader) throws IOException {
     reader.beginObject();
     while (reader.hasNext()) {
       String name = reader.nextName();
@@ -192,17 +188,16 @@ public class Resource implements Iterable<Resource> {
   /**
    * Parse resource property
    *
-   * @param gson
    * @param reader
    * @param name
    * @throws IOException
    */
-  protected void parseProperty(final Gson gson, final JsonReader reader,
-      final String name) throws IOException {
+  protected void parseProperty(final JsonReader reader, final String name)
+      throws IOException {
     JsonToken next = reader.peek();
     switch (next) {
     case BEGIN_OBJECT:
-      properties.put(name, gson.fromJson(reader, Map.class));
+      properties.put(name, gson.getGson().fromJson(reader, Map.class));
       break;
     case STRING:
       properties.put(name, reader.nextString());
@@ -225,11 +220,10 @@ public class Resource implements Iterable<Resource> {
   /**
    * Parse links from current reader's next object value
    *
-   * @param gson
    * @param reader
    */
-  protected void parseLinks(final Gson gson, final JsonReader reader) {
-    Map<String, Link> links = gson.fromJson(reader, TYPE_LINKS);
+  protected void parseLinks(final JsonReader reader) {
+    Map<String, Link> links = gson.getGson().fromJson(reader, TYPE_LINKS);
     if (links != null && !links.isEmpty())
       this.links.putAll(links);
   }
