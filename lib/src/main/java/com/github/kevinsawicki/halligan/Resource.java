@@ -139,6 +139,29 @@ public class Resource implements Iterable<Resource> {
     return HttpRequest.get(url).accept("application/hal+json");
   }
 
+  /**
+   * Create new resource from position at given JSON reader
+   *
+   * @param reader
+   * @return new resource
+   * @throws IOException
+   */
+  protected Resource createResource(final JsonReader reader) throws IOException {
+    return new Resource(this, gson, reader);
+  }
+
+  /**
+   * Create new resource backed by given URL
+   *
+   * @param url
+   * @return new resource
+   * @throws IOException
+   * @throw IOException
+   */
+  protected Resource createResource(final String url) throws IOException {
+    return new Resource(prefix + url);
+  }
+
   private void parse(final JsonReader reader) throws IOException {
     reader.beginObject();
     while (reader.hasNext() && reader.peek() == NAME) {
@@ -166,14 +189,13 @@ public class Resource implements Iterable<Resource> {
       JsonToken next = reader.peek();
       switch (next) {
       case BEGIN_OBJECT:
-        resources.put(name,
-            Collections.singletonList(new Resource(this, gson, reader)));
+        resources.put(name, Collections.singletonList(createResource(reader)));
         break;
       case BEGIN_ARRAY:
         reader.beginArray();
         List<Resource> entries = new ArrayList<Resource>();
         while (reader.peek() == BEGIN_OBJECT)
-          entries.add(new Resource(this, gson, reader));
+          entries.add(createResource(reader));
         reader.endArray();
         resources.put(name, entries);
         break;
@@ -413,7 +435,7 @@ public class Resource implements Iterable<Resource> {
    * @throws IOException
    */
   public Resource next() throws IOException {
-    return new Resource(gson, prefix + getNextUri());
+    return createResource(getNextUri());
   }
 
   /**
@@ -423,7 +445,7 @@ public class Resource implements Iterable<Resource> {
    * @throws IOException
    */
   public Resource load() throws IOException {
-    return new Resource(gson, prefix + getSelfUri());
+    return createResource(getSelfUri());
   }
 
   /**
