@@ -125,7 +125,15 @@ public class Resource implements Iterable<Resource> {
     }
   }
 
-  private Resource(final Resource parent, final GsonFactory gson,
+  /**
+   * Create child resource
+   *
+   * @param parent
+   * @param gson
+   * @param reader
+   * @throws IOException
+   */
+  protected Resource(final Resource parent, final GsonFactory gson,
       final JsonReader reader) throws IOException {
     code = parent.code;
     prefix = parent.prefix;
