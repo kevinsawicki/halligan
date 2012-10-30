@@ -147,7 +147,7 @@ public class Resource implements Iterable<Resource>, Serializable {
   }
 
   /**
-   * Create new resource
+   * Create new child resource
    *
    * @return new resource
    * @throws IOException
@@ -157,7 +157,7 @@ public class Resource implements Iterable<Resource>, Serializable {
   }
 
   /**
-   * Create new resource backed by given URL
+   * Create new root-level resource backed by given URL
    *
    * @param url
    * @return new resource
