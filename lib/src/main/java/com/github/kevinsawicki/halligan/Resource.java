@@ -213,7 +213,14 @@ public class Resource implements Iterable<Resource>, Serializable {
     return this;
   }
 
-  private Resource parse(final JsonReader reader) throws IOException {
+  /**
+   * Fill this resource by parsing the next object in the reader
+   *
+   * @param reader
+   * @return this resource
+   * @throws IOException
+   */
+  protected Resource parse(final JsonReader reader) throws IOException {
     reader.beginObject();
     while (reader.hasNext() && reader.peek() == NAME) {
       String name = reader.nextName();
