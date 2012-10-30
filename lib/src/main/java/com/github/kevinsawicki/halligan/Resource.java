@@ -69,12 +69,9 @@ public class Resource implements Iterable<Resource>, Serializable {
    */
   protected final GsonFactory gson;
 
-  /**
-   * Host prefix
-   */
-  protected final String prefix;
+  private String prefix;
 
-  private final int code;
+  private int code;
 
   /**
    * Resource properties
@@ -102,15 +99,92 @@ public class Resource implements Iterable<Resource>, Serializable {
   }
 
   /**
-   * Create resource form URL
+   * Create resource from URL
    *
    * @param gson
    * @param url
    * @throws IOException
    */
   public Resource(final GsonFactory gson, final String url) throws IOException {
-    this.gson = gson;
+    this(gson);
 
+    parse(url);
+  }
+
+  /**
+   * Create resource with Gson factory
+   *
+   * @param gson
+   */
+  protected Resource(final GsonFactory gson) {
+    this.gson = gson;
+  }
+
+  /**
+   * Create child resource
+   *
+   * @param parent
+   * @param gson
+   * @throws IOException
+   */
+  protected Resource(final Resource parent, final GsonFactory gson)
+      throws IOException {
+    code = parent.code;
+    prefix = parent.prefix;
+    this.gson = gson;
+  }
+
+  /**
+   * Create request to URL
+   *
+   * @param url
+   * @return request
+   * @throws HttpRequestException
+   */
+  protected HttpRequest createRequest(final String url)
+      throws HttpRequestException {
+    return HttpRequest.get(url).accept("application/hal+json");
+  }
+
+  /**
+   * Create new resource
+   *
+   * @return new resource
+   * @throws IOException
+   */
+  protected Resource createResource() throws IOException {
+    return new Resource(this, gson);
+  }
+
+  /**
+   * Create new resource backed by given URL
+   *
+   * @param url
+   * @return new resource
+   * @throws IOException
+   * @throw IOException
+   */
+  protected Resource createResource(final String url) throws IOException {
+    if (url.length() > 0 && url.charAt(0) == '/')
+      return new Resource(prefix + url);
+    else
+      return new Resource(url);
+  }
+
+  private Resource requestResource(String url) throws IOException {
+    if (url.length() > 0 && url.charAt(0) == '/')
+      url = prefix + url;
+    return createResource(url);
+  }
+
+  /**
+   * Fill this resource by opening a request to the URL and parsing the response
+   *
+   * @param url
+   * @return this resource
+   * @throws IOException
+   */
+  protected Resource parse(final String url) throws IOException {
     BufferedReader buffer;
     try {
       HttpRequest request = createRequest(url);
@@ -135,69 +209,11 @@ public class Resource implements Iterable<Resource>, Serializable {
         // Ignored
       }
     }
+
+    return this;
   }
 
-  /**
-   * Create child resource
-   *
-   * @param parent
-   * @param gson
-   * @param reader
-   * @throws IOException
-   */
-  protected Resource(final Resource parent, final GsonFactory gson,
-      final JsonReader reader) throws IOException {
-    code = parent.code;
-    prefix = parent.prefix;
-    this.gson = gson;
-    parse(reader);
-  }
-
-  /**
-   * Create request to URL
-   *
-   * @param url
-   * @return request
-   * @throws HttpRequestException
-   */
-  protected HttpRequest createRequest(final String url)
-      throws HttpRequestException {
-    return HttpRequest.get(url).accept("application/hal+json");
-  }
-
-  /**
-   * Create new resource from position at given JSON reader
-   *
-   * @param reader
-   * @return new resource
-   * @throws IOException
-   */
-  protected Resource createResource(final JsonReader reader) throws IOException {
-    return new Resource(this, gson, reader);
-  }
-
-  /**
-   * Create new resource backed by given URL
-   *
-   * @param url
-   * @return new resource
-   * @throws IOException
-   * @throw IOException
-   */
-  protected Resource createResource(final String url) throws IOException {
-    if (url.length() > 0 && url.charAt(0) == '/')
-      return new Resource(prefix + url);
-    else
-      return new Resource(url);
-  }
-
-  private Resource requestResource(String url) throws IOException {
-    if (url.length() > 0 && url.charAt(0) == '/')
-      url = prefix + url;
-    return createResource(url);
-  }
-
-  private void parse(final JsonReader reader) throws IOException {
+  private Resource parse(final JsonReader reader) throws IOException {
     reader.beginObject();
     while (reader.hasNext() && reader.peek() == NAME) {
       String name = reader.nextName();
@@ -209,6 +225,7 @@ public class Resource implements Iterable<Resource>, Serializable {
         parseProperty(reader, name);
     }
     reader.endObject();
+    return this;
   }
 
   /**
@@ -224,13 +241,14 @@ public class Resource implements Iterable<Resource>, Serializable {
       JsonToken next = reader.peek();
       switch (next) {
       case BEGIN_OBJECT:
-        resources.put(name, Collections.singletonList(createResource(reader)));
+        resources.put(name,
+            Collections.singletonList(createResource().parse(reader)));
         break;
       case BEGIN_ARRAY:
         reader.beginArray();
         List<Resource> entries = new ArrayList<Resource>();
         while (reader.peek() == BEGIN_OBJECT)
-          entries.add(createResource(reader));
+          entries.add(createResource().parse(reader));
         reader.endArray();
         resources.put(name, entries);
         break;
