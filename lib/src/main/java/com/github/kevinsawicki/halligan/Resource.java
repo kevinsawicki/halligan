@@ -449,6 +449,17 @@ public class Resource implements Iterable<Resource>, Serializable {
   }
 
   /**
+   * Get number of embedded resources with given name
+   *
+   * @param name
+   * @return count
+   */
+  public int getResourceCount(final String name) {
+    List<Resource> resources = getResources(name);
+    return resources != null ? resources.size() : 0;
+  }
+
+  /**
    * Get embedded resource with name
    *
    * @param name

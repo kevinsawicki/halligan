@@ -178,9 +178,11 @@ public class ResourceTest extends HalServerTestCase {
     Resource resource = new Resource(url);
     assertTrue(resource.hasResources());
     assertTrue(resource.hasResource("orders"));
+    assertEquals(0, resource.getResourceCount("orders2"));
     List<Resource> resources = resource.getResources("orders");
     assertNotNull(resources);
     assertEquals(2, resources.size());
+    assertEquals(2, resource.getResourceCount("orders"));
 
     Resource order1 = resources.get(0);
     assertFalse(order1.hasResources());
