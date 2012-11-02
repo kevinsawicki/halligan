@@ -62,4 +62,14 @@ public class LinkTest {
     values.put("d", 404);
     assertEquals("/avatar?s=300&d=404", link.expandHref(values));
   }
+
+  /**
+   * Expand templated URI with values varargs
+   */
+  @Test
+  public void expandedValuesVarargs() {
+    Link link = new Link("/avatar{?s,d}", null, null, null, true, null, null);
+    assertEquals("/avatar?s=200&d=random",
+        link.expandHref("s", "200", "d", "random"));
+  }
 }
