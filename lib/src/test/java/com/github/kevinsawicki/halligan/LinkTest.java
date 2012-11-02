@@ -21,8 +21,12 @@
  */
 package com.github.kevinsawicki.halligan;
 
+import static org.junit.Assert.assertEquals;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  * Unit tests of {@link Link}
@@ -45,5 +49,17 @@ public class LinkTest {
   public void expandedValue() {
     Link link = new Link("/orders{?id}", null, null, null, true, null, null);
     assertEquals("/orders?id=3", link.expandHref("id", 3));
+  }
+
+  /**
+   * Expand templated URI with values map
+   */
+  @Test
+  public void expandedValuesMap() {
+    Link link = new Link("/avatar{?s,d}", null, null, null, true, null, null);
+    Map<String, Object> values = new HashMap<String, Object>();
+    values.put("s", 300);
+    values.put("d", 404);
+    assertEquals("/avatar?s=300&d=404", link.expandHref(values));
   }
 }
