@@ -21,7 +21,10 @@
  */
 package com.github.kevinsawicki.halligan;
 
+import com.damnhandy.uri.template.UriTemplate;
+
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * Link properties
@@ -86,5 +89,64 @@ public class Link implements Serializable {
     this.templated = templated;
     this.title = title;
     this.type = type;
+  }
+
+  /**
+   * Expand templated href with no params
+   *
+   * @return href with no expanded values if this link if templated, base href
+   *         otherwise
+   */
+  public String expandHref() {
+    if (templated)
+      return UriTemplate.fromTemplate(href).expand();
+    else
+      return href;
+  }
+
+  /**
+   * Expand templated href using given values
+   *
+   * @param values
+   * @return href with values expanded if this link is templated, base href
+   *         otherwise
+   */
+  public String expandHref(final Map<String, Object> values) {
+    if (templated)
+      return UriTemplate.fromTemplate(href).set(values).expand();
+    else
+      return href;
+  }
+
+  /**
+   * Expand templated href using given name and value
+   *
+   * @param name
+   * @param value
+   * @return href with name/value expanded if this link is templated, base href
+   *         otherwise
+   */
+  public String expandHref(final String name, final Object value) {
+    if (templated)
+      return UriTemplate.fromTemplate(href).set(name, value).expand();
+    else
+      return href;
+  }
+
+  /**
+   * Expand templated href using given name/value pairs
+   *
+   * @param values
+   * @return href with values expanded if this link is templated, base href
+   *         otherwise
+   */
+  public String expandHref(final Object... values) {
+    if (templated) {
+      final UriTemplate template = UriTemplate.fromTemplate(href);
+      for (int i = 0; i < values.length; i += 2)
+        template.set(values[i].toString(), values[i + 1]);
+      return template.expand();
+    } else
+      return href;
   }
 }
