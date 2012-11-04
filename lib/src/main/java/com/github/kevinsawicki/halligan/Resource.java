@@ -39,8 +39,8 @@ import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -76,17 +76,17 @@ public class Resource implements Iterable<Resource>, Serializable {
   /**
    * Resource properties
    */
-  protected final Map<String, Object> properties = new LinkedHashMap<String, Object>();
+  protected final Map<String, Object> properties = new HashMap<String, Object>();
 
   /**
    * Resource links
    */
-  protected final Map<String, Link> links = new LinkedHashMap<String, Link>();
+  protected final Map<String, Link> links = new HashMap<String, Link>();
 
   /**
    * Embedded resources
    */
-  protected final Map<String, List<Resource>> resources = new LinkedHashMap<String, List<Resource>>();
+  protected final Map<String, List<Resource>> resources = new HashMap<String, List<Resource>>();
 
   /**
    * Create resource from URL
