@@ -165,10 +165,7 @@ public class Resource implements Iterable<Resource>, Serializable {
    * @throw IOException
    */
   protected Resource createResource(final String url) throws IOException {
-    if (url.length() > 0 && url.charAt(0) == '/')
-      return new Resource(prefix + url);
-    else
-      return new Resource(url);
+    return new Resource(url);
   }
 
   private Resource requestResource(String url) throws IOException {
