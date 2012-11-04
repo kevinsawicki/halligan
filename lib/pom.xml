@@ -13,7 +13,8 @@
   <artifactId>halligan</artifactId>
   <version>0.1-SNAPSHOT</version>
   <url>https://github.com/kevinsawicki/halligan</url>
-  <description>Library for making hypermedia HTTP requests</description>
+  <name>Halligan</name>
+  <description>Library for making JSON Hypermedia API Language (HAL) HTTP requests</description>
   <inceptionYear>2012</inceptionYear>
 
   <issueManagement>
