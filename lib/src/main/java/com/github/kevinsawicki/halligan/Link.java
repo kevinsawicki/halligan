@@ -149,4 +149,20 @@ public class Link implements Serializable {
     } else
       return href;
   }
+
+  @Override
+  public int hashCode() {
+    if (href != null)
+      return href.hashCode();
+    else
+      return super.hashCode();
+  }
+
+  @Override
+  public String toString() {
+    if (href != null)
+      return href;
+    else
+      return super.toString();
+  }
 }
