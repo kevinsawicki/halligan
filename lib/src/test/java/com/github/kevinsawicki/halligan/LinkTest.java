@@ -23,6 +23,7 @@ package com.github.kevinsawicki.halligan;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,6 +33,17 @@ import org.junit.Test;
  * Unit tests of {@link Link}
  */
 public class LinkTest {
+
+  /**
+   * Expand non-templated URI
+   */
+  @Test
+  public void notTemplated() {
+    Link link = new Link("/orders", null, null, null, false, null, null);
+    assertEquals("/orders", link.expandHref("a", "b"));
+    assertEquals("/orders", link.expandHref(Collections.singletonMap("1", "2")));
+    assertEquals("/orders", link.expandHref("a", "b", "c", "d"));
+  }
 
   /**
    * Expand templated URI with no values
