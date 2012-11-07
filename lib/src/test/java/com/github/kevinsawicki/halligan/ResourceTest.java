@@ -28,6 +28,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import com.github.kevinsawicki.http.HttpRequest;
+import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -238,5 +241,26 @@ public class ResourceTest extends HalServerTestCase {
     };
 
     new Resource(url);
+  }
+
+  /**
+   * Raise {@link HttpRequestException} during request
+   *
+   * @throws Exception
+   */
+  @SuppressWarnings("serial")
+  @Test(expected = IOException.class)
+  public void requestException() throws Exception {
+    final HttpRequestException thrown = new HttpRequestException(
+        new IOException()) {
+    };
+    new Resource(url) {
+
+      @Override
+      protected HttpRequest createRequest(String url)
+          throws HttpRequestException {
+        throw thrown;
+      }
+    };
   }
 }
