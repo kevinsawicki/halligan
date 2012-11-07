@@ -40,6 +40,7 @@ public class LinkTest {
   @Test
   public void notTemplated() {
     Link link = new Link("/orders", null, null, null, false, null, null);
+    assertEquals("/orders", link.expandHref());
     assertEquals("/orders", link.expandHref("a", "b"));
     assertEquals("/orders", link.expandHref(Collections.singletonMap("1", "2")));
     assertEquals("/orders", link.expandHref("a", "b", "c", "d"));
