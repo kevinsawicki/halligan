@@ -31,12 +31,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.jetty.server.Connector;
-import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 
 /**
  * Base test case that provides a running HTTP server
@@ -141,26 +141,49 @@ public class HalServerTestCase {
   }
 
   /**
+   * URL to server
+   */
+  protected static String url;
+
+  /**
    * Server
    */
   protected static Server server;
 
   /**
+   * Handler for server requests
+   */
+  protected static RequestHandler handler;
+
+  /**
    * Set up server with handler
    *
-   * @param handler
-   * @return port
    * @throws Exception
    */
-  public static String setUp(final Handler handler) throws Exception {
+  @BeforeClass
+  public static void setUp() throws Exception {
     server = new Server();
-    if (handler != null)
-      server.setHandler(handler);
+    server.setHandler(new RequestHandler() {
+
+      @Override
+      public void handle(String target, Request baseRequest,
+          HttpServletRequest request, HttpServletResponse response)
+          throws IOException, ServletException {
+        if (handler != null)
+          handler.handle(target, baseRequest, request, response);
+      }
+
+      @Override
+      public void handle(Request request, HttpServletResponse response) {
+        if (handler != null)
+          handler.handle(request, response);
+      }
+    });
     Connector connector = new SelectChannelConnector();
     connector.setPort(0);
     server.setConnectors(new Connector[] { connector });
     server.start();
-    return "http://localhost:" + connector.getLocalPort();
+    url = "http://localhost:" + connector.getLocalPort();
   }
 
   /**

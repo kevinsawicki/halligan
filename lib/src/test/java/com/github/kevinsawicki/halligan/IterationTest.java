@@ -33,15 +33,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.jetty.server.Request;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
  * Unit tests of iterating over next resource links
  */
 public class IterationTest extends HalServerTestCase {
-
-  private static String url;
 
   private static LinkedList<String> pages = new LinkedList<String>();
 
@@ -50,16 +47,16 @@ public class IterationTest extends HalServerTestCase {
    *
    * @throws Exception
    */
-  @BeforeClass
-  public static void setup() throws Exception {
-    url = setUp(new RequestHandler() {
+  @Before
+  public void setup() throws Exception {
+    handler = new RequestHandler() {
 
       @Override
       public void handle(Request request, HttpServletResponse response) {
         writeFile(pages.removeFirst());
         response.setStatus(HTTP_OK);
       }
-    });
+    };
   }
 
   /**

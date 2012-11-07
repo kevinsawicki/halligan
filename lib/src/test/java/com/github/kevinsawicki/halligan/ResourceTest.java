@@ -28,6 +28,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -35,7 +36,7 @@ import java.util.Map.Entry;
 import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.jetty.server.Request;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -43,23 +44,21 @@ import org.junit.Test;
  */
 public class ResourceTest extends HalServerTestCase {
 
-  private static String url;
-
   /**
    * Setup method
    *
    * @throws Exception
    */
-  @BeforeClass
-  public static void setup() throws Exception {
-    url = setUp(new RequestHandler() {
+  @Before
+  public void setup() throws Exception {
+    handler = new RequestHandler() {
 
       @Override
       public void handle(Request request, HttpServletResponse response) {
         writeFile("/response.json");
         response.setStatus(HTTP_OK);
       }
-    });
+    };
   }
 
   /**
@@ -221,5 +220,23 @@ public class ResourceTest extends HalServerTestCase {
     assertEquals("/orders/123", order.getSelfUri());
     assertEquals("/baskets/98712", order.getLinkUri("basket"));
     assertEquals("/customers/7809", order.getLinkUri("customer"));
+  }
+
+  /**
+   * Request malformed resource
+   *
+   * @throws Exception
+   */
+  @Test(expected = IOException.class)
+  public void malformedResponse() throws Exception {
+    handler = new RequestHandler() {
+
+      @Override
+      public void handle(Request request, HttpServletResponse response) {
+        writeFile("/response_malformed.json");
+      }
+    };
+
+    new Resource(url);
   }
 }
