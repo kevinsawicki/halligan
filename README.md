@@ -3,7 +3,7 @@
 A [JSON Hypermedia API Language (HAL)](http://tools.ietf.org/id/draft-kelly-json-hal-03.txt)
 Java library.
 
-The library is available from [Maven Central](http://search.maven.org/#artifactdetails%7Ccom.github.kevinsawicki%7Challigan):
+The library is available from [Maven Central](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.github.kevinsawicki%22%20AND%20a%3A%22halligan%22):
 
 ```xml
 <dependency>
