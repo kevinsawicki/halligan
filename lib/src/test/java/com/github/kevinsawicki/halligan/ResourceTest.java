@@ -129,6 +129,19 @@ public class ResourceTest extends HalServerTestCase {
   }
 
   /**
+   * Get resource property as a long
+   *
+   * @throws Exception
+   */
+  @Test
+  public void longProperty() throws Exception {
+    Resource resource = new Resource(url);
+    assertEquals(-1, resource.getLong("doesntExist"));
+    assertEquals(14, resource.getLong("currentlyProcessing"));
+    assertEquals(20, resource.getLong("shippedToday"));
+  }
+
+  /**
    * Get resource property as a double
    *
    * @throws Exception
