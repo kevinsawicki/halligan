@@ -351,7 +351,7 @@ public class Resource implements Iterable<Resource>, Serializable {
    */
   public String getLinkUri(final String name) {
     final Link link = getLink(name);
-    return link != null ? link.href : null;
+    return link != null ? link.expandHref() : null;
   }
 
   /**
