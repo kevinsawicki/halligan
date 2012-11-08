@@ -528,6 +528,17 @@ public class Resource implements Iterable<Resource>, Serializable {
   }
 
   /**
+   * Load resource with given link name
+   *
+   * @param linkName
+   * @return resource
+   * @throws Exception
+   */
+  public Resource load(final String linkName) throws Exception {
+    return requestResource(getLinkUri(linkName));
+  }
+
+  /**
    * Get all embedded resources
    *
    * @return iterator over all embedded resources
