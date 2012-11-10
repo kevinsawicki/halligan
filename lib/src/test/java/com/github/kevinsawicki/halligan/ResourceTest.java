@@ -109,6 +109,7 @@ public class ResourceTest extends HalServerTestCase {
   public void getFindLink() throws Exception {
     Resource resource = new Resource(url);
     assertEquals("/orders", resource.getFindUri());
+    assertTrue(resource.hasLink("find"));
     Link link = resource.getLink("find");
     assertNotNull(link);
     assertEquals("/orders{?id}", link.href);

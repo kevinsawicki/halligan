@@ -498,6 +498,16 @@ public class Resource implements Iterable<Resource>, Serializable {
   }
 
   /**
+   * Does this resource have a link with the given name?
+   *
+   * @param name
+   * @return true if resource has link with name, false otherwise
+   */
+  public boolean hasLink(final String name) {
+    return links.get(name) != null;
+  }
+
+  /**
    * Does this resource have a link to the next resource?
    *
    * @return true if link exists for the next resource, false otherwise
