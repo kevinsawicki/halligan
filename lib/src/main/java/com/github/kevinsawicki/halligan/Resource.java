@@ -365,6 +365,15 @@ public class Resource implements Iterable<Resource>, Serializable {
   }
 
   /**
+   * Get all links
+   *
+   * @return possibly empty {@link Iterable} over all links
+   */
+  public Iterable<Entry<String, Link>> getLinks() {
+    return links.entrySet();
+  }
+
+  /**
    * Get resource property as an integer
    *
    * @param name
