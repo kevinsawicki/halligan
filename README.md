@@ -9,7 +9,7 @@ The library is available from [Maven Central](http://search.maven.org/#search%7C
 <dependency>
   <groupId>com.github.kevinsawicki</groupId>
   <artifactId>halligan</artifactId>
-  <version>0.1</version>
+  <version>0.2</version>
 </dependency>
 ```
 
