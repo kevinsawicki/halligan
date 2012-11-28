@@ -22,6 +22,8 @@
 package com.github.kevinsawicki.halligan;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -85,5 +87,29 @@ public class LinkTest {
     Link link = new Link("/avatar{?s,d}", null, null, null, true, null, null);
     assertEquals("/avatar?s=200&d=random",
         link.expandHref("s", "200", "d", "random"));
+  }
+
+  /**
+   * Verify link equality
+   */
+  @Test
+  public void equalLinks() {
+    Link l1 = new Link("a", null, null, null, true, null, null);
+    assertTrue(l1.equals(l1));
+    assertFalse(l1.equals(null));
+    assertFalse(l1.equals("a"));
+
+    assertFalse(l1.equals(new Link("a", null, null, null, false, null, null)));
+    assertTrue(l1.equals(new Link("a", null, null, null, true, null, null)));
+    assertFalse(l1.equals(new Link("b", null, null, null, true, null, null)));
+
+    Link l2 = new Link("a", null, null, null, false, null, null);
+    assertTrue(l2.equals(l2));
+    assertFalse(l2.equals(null));
+    assertFalse(l2.equals("a"));
+
+    assertFalse(l2.equals(new Link("a", null, null, null, true, null, null)));
+    assertTrue(l2.equals(new Link("a", null, null, null, false, null, null)));
+    assertFalse(l2.equals(new Link("b", null, null, null, true, null, null)));
   }
 }

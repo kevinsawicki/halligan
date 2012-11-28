@@ -21,9 +21,13 @@
  */
 package com.github.kevinsawicki.halligan;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
+
 import com.damnhandy.uri.template.UriTemplate;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -151,9 +155,25 @@ public class Link implements Serializable {
   }
 
   @Override
+  public boolean equals(final Object obj) {
+    if (obj == this)
+      return true;
+    if (!(obj instanceof Link))
+      return false;
+    if (href == null)
+      return false;
+
+    Link other = (Link) obj;
+    return templated == other.templated && href.equals(other.href);
+  }
+
+  @Override
   public int hashCode() {
     if (href != null)
-      return href.hashCode();
+      if (templated)
+        return Arrays.hashCode(new Object[] { href, TRUE });
+      else
+        return Arrays.hashCode(new Object[] { href, FALSE });
     else
       return super.hashCode();
   }
