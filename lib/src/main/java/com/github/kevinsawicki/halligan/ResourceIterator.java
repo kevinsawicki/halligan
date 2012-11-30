@@ -53,7 +53,7 @@ public class ResourceIterator implements Iterator<Resource> {
     if (!hasNext())
       throw new NoSuchElementException("Resource does not have a next link");
 
-    if (!advanced)
+    if (advanced)
       try {
         resource = resource.next();
       } catch (IOException e) {
