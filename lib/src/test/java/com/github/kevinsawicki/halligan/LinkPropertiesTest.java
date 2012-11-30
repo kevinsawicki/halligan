@@ -13,6 +13,7 @@ package com.github.kevinsawicki.halligan;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -66,5 +67,7 @@ public class LinkPropertiesTest extends HalServerTestCase {
     assertNotNull(small);
     assertEquals(210, small.getInt("width"));
     assertEquals(157, small.getInt("height"));
+    assertTrue(small.getBoolean("dither"));
+    assertEquals("#F00", small.getString("background"));
   }
 }

@@ -16,7 +16,9 @@
       "height": 157, 
       "href": "/orders/picture_large.jpg", 
       "type": "application/jpg", 
-      "width": 210
+      "width": 210,
+      "dither": true,
+      "background": "#F00"
     }
   }
 }
