@@ -23,12 +23,19 @@ package com.github.kevinsawicki.halligan;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+
+import java.lang.reflect.Type;
+import java.util.Map;
 
 /**
  * Default {@link Gson} factory that uses the {@link GsonBuilder} default
  * settings
  */
-public class DefaultGsonFactory implements GsonFactory {
+public class DefaultGsonFactory implements GsonFactory, JsonDeserializer<Link> {
 
   private static final long serialVersionUID = 7213102387291325215L;
 
@@ -39,9 +46,25 @@ public class DefaultGsonFactory implements GsonFactory {
 
   private transient Gson gson;
 
+  /**
+   * Create default builder
+   *
+   * @return builder
+   */
+  protected GsonBuilder createBuilder() {
+    return new GsonBuilder().registerTypeAdapter(Link.class, this);
+  }
+
   public Gson getGson() {
     if (gson == null)
-      gson = new GsonBuilder().create();
+      gson = createBuilder().create();
     return gson;
+  }
+
+  public Link deserialize(JsonElement json, Type typeOfT,
+      JsonDeserializationContext context) throws JsonParseException {
+    @SuppressWarnings("unchecked")
+    Map<String, Object> linkProperties = getGson().fromJson(json, Map.class);
+    return new Link(linkProperties);
   }
 }

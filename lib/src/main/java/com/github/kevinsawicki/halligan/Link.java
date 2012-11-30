@@ -28,6 +28,7 @@ import com.damnhandy.uri.template.UriTemplate;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -36,6 +37,11 @@ import java.util.Map;
 public class Link implements Serializable {
 
   private static final long serialVersionUID = -3017682664576119547L;
+
+  private String getValue(final String name, final Map<String, Object> values) {
+    final Object value = values.remove(name);
+    return value != null ? value.toString() : null;
+  }
 
   /**
    * A URI that can be templated
@@ -72,6 +78,8 @@ public class Link implements Serializable {
    */
   public final String type;
 
+  private final Map<String, Object> properties = new HashMap<String, Object>();
+
   /**
    * Create link with values
    *
@@ -93,6 +101,32 @@ public class Link implements Serializable {
     this.templated = templated;
     this.title = title;
     this.type = type;
+  }
+
+  /**
+   * Create link with values from map
+   *
+   * @param properties
+   */
+  public Link(final Map<String, Object> properties) {
+    if (properties != null) {
+      this.properties.putAll(properties);
+      href = getValue("href", this.properties);
+      hreflang = getValue("hreflang", this.properties);
+      name = getValue("name", this.properties);
+      profile = getValue("profile", properties);
+      templated = Boolean.valueOf(getValue("templated", this.properties));
+      title = getValue("title", this.properties);
+      type = getValue("type", this.properties);
+    } else {
+      this.href = null;
+      this.hreflang = null;
+      this.name = null;
+      this.profile = null;
+      this.templated = false;
+      this.title = null;
+      this.type = null;
+    }
   }
 
   /**
@@ -152,6 +186,77 @@ public class Link implements Serializable {
       return template.expand();
     } else
       return href;
+  }
+
+  /**
+   * Get resource property as an integer
+   *
+   * @param name
+   * @return integer value or -1 if the property is missing or not a
+   *         {@link Number}
+   */
+  public int getInt(final String name) {
+    final Object value = properties.get(name);
+    return value instanceof Number ? ((Number) value).intValue() : -1;
+  }
+
+  /**
+   * Get link property as an integer
+   *
+   * @param name
+   * @return integer value or -1 if the property is missing or not a
+   *         {@link Number}
+   */
+  public double getDouble(final String name) {
+    final Object value = properties.get(name);
+    return value instanceof Number ? ((Number) value).doubleValue() : -1;
+  }
+
+  /**
+   * Get link property as a long
+   *
+   * @param name
+   * @return long value or -1 if the property is missing or not a {@link Number}
+   */
+  public long getLong(final String name) {
+    final Object value = properties.get(name);
+    return value instanceof Number ? ((Number) value).longValue() : -1;
+  }
+
+  /**
+   * Get link property as a boolean
+   *
+   * @param name
+   * @return boolean value or false if the property is missing or not a
+   *         {@link Boolean}
+   */
+  public boolean getBoolean(final String name) {
+    final Object value = properties.get(name);
+    return value instanceof Boolean ? ((Boolean) value).booleanValue() : false;
+  }
+
+  /**
+   * Get link property as a {@link String}
+   *
+   * @param name
+   * @return string value of property or null if the property is missing
+   */
+  public String getString(final String name) {
+    final Object value = properties.get(name);
+    return value != null ? value.toString() : null;
+  }
+
+  /**
+   * Get link property as a {@link Map}
+   *
+   * @param name
+   * @return map value of property of null if the property is missing or not a
+   *         {@link Map}
+   */
+  @SuppressWarnings("unchecked")
+  public Map<String, Object> getMap(final String name) {
+    final Object value = properties.get(name);
+    return value instanceof Map ? (Map<String, Object>) value : null;
   }
 
   @Override
