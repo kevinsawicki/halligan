@@ -1,4 +1,4 @@
-# Halligan
+# Halligan [![Build Status](https://travis-ci.org/kevinsawicki/halligan.png)](https://travis-ci.org/kevinsawicki/halligan)
 
 A [JSON Hypermedia API Language (HAL)](http://tools.ietf.org/id/draft-kelly-json-hal-03.txt)
 Java library.
@@ -31,4 +31,3 @@ $ mvn clean install
 
 ### What does the name mean?
 Read [here](http://en.wikipedia.org/wiki/Halligan_bar).
-
